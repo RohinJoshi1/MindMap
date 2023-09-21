@@ -34,22 +34,21 @@ const Notepad = () => {
               <Head>
                 <title>Enhanced Journal</title>
               </Head>
-        
-              <main className={styles.main}>
-                  <Title level={2}>How are you feeling today?</Title>
-                <textarea
-                  className={styles.focused}
-
-                  placeholder="Enter journal entry"
-                  value={journalEntry}
-                  onChange={(e) => handleTextareaChange(e)}
-                  name="journalEntry"
-                  maxW
-                  onKeyDown={handlePressEnter}
-                />
-                <Button className={styles.save} onClick={(e) => submitJournal(e)}>
-                  Save Entry
-                </Button>
+              <main className="h-screen ml-3">
+                  <Title className="text-3xl mt-4">How are you feeling today?</Title>
+                  <div className="flex flex-col justify-center">
+                    <textarea
+                    className="w-3/4 h-[15em] p-2 border rounded-md text-base text-gray-700 focus:ring focus:border-blue-500 resize-y"                  placeholder="Enter journal entry"
+                    value={journalEntry}
+                    onChange={(e) => handleTextareaChange(e)}
+                    name="journalEntry"
+                    onKeyDown={handlePressEnter}
+                    />
+                  <Button className="w-[8em] mt-5 bg-gray-800 text-white" onClick={(e) => submitJournal(e)}>
+                    Save Entry
+                  </Button>
+                  </div>
+                
               </main>
             </>
           );
