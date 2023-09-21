@@ -6,11 +6,13 @@ import Link from "next/link";
 import {Textarea} from "@nextui-org/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { UserAuth } from "../context/AuthContext";
 import toast from "react-simple-toasts";
-import app from "../firebase";
+import {app} from "../firebase";
 import styles from "./index.module.css";
 const { Title, Text } = Typography;
 const Notepad = () => {
+    const { user } = UserAuth();
     const [journalEntry, setJournalEntry] = useState("");
     const [result, setResult] = useState();
     const [currEntry, setCurrEntry] = useState([]);
@@ -22,13 +24,50 @@ const Notepad = () => {
         if (event.keyCode === 13) {
           // Enter key
           event.preventDefault();
-          console.log("do")
+          submitEntry()
         }
       };
+      //Submit journal will push data to db
       const submitJournal = (event)=>{
+        //Create entry id 
+        const id = user;
+        const date = new Date()
+        const time = date.getTime()
+        const sesh = 
+        {   
+            date: date,
+            time:time,
+            entry:currEntry
+        }
+        const reference = app.database().ref("users").child(id).child("sessions")
+        const append = reference.push()
+        append.set(sesh)
+        alert("Saved");
         console.log(event)
-      }
+        //Get db ref 
+        
 
+
+      }
+      //Feed this to LLM + (Summarizer + Roberta)
+      const submitEntry = async () =>{
+        currEntry.push(journalEntry)
+        try {
+            const res = await fetch ("/api/respond",{
+                method: "POST",
+                headers: {
+                    "Content-Type":"application/json",
+                }
+                body: JSON.stringify({message:journalEntry})
+            });
+        const data = await response.json();
+        setResult(data.result);
+        setJournalEntry("");
+        //Check if it's 200
+        } catch (error) {
+            console.log(error)
+        }
+      }
         return (
             <>
               <Head>
@@ -44,7 +83,6 @@ const Notepad = () => {
                   value={journalEntry}
                   onChange={(e) => handleTextareaChange(e)}
                   name="journalEntry"
-                  maxW
                   onKeyDown={handlePressEnter}
                 />
                 <Button className={styles.save} onClick={(e) => submitJournal(e)}>
