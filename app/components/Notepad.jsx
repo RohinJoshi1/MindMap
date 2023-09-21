@@ -34,8 +34,8 @@ const Notepad = () => {
               <Head>
                 <title>Enhanced Journal</title>
               </Head>
-              <main className="h-screen ml-3">
-                  <Title className="text-3xl mt-4">How are you feeling today?</Title>
+              <main className="h-screen ml-6">
+                  <Title className="text-3xl mt-4">Tell me about your day</Title>
                   <div className="flex flex-col justify-center">
                     <textarea
                     className="w-3/4 h-[15em] p-2 border rounded-md text-base text-gray-700 focus:ring focus:border-blue-500 resize-y"                  placeholder="Enter journal entry"
