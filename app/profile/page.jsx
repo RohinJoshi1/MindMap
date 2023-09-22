@@ -1,5 +1,5 @@
 "use client";
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import {Button} from 'antd'
 import {Image} from "@nextui-org/react";
 import {
@@ -19,16 +19,11 @@ import {
 } from "recharts";
 
 
-  const item =  sessionStorage.getItem("emotions");
-  console.log("PROFILE")
-  console.log(item)
-
-
 
 const data = [
   {
     subject: "Happy",
-    A: 120,
+    A: 100,
     B: 110,
     fullMark: 150
   },
@@ -110,7 +105,13 @@ const data2 = [
 ];
 
 const page = () => {
+  const [emotion, setEmotion] = useState(sessionStorage.getItem("Emotions"));
 
+
+  useEffect(() => {
+    console.log(emotion);
+  }, []);
+  
   return (
     <div>
         <div className='flex justify-end mr-[2em] mt-[2em]'>
