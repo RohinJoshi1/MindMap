@@ -69,29 +69,29 @@ const Notepad = () => {
             console.log(error)
         }
       }
-        return (
-            <>
-              <Head>
-                <title>Enhanced Journal</title>
-              </Head>
-        
-              <main className={styles.main}>
-                  <Title level={2}>How are you feeling today?</Title>
-                <textarea
-                  className={styles.focused}
-
-                  placeholder="Enter journal entry"
-                  value={journalEntry}
-                  onChange={(e) => handleTextareaChange(e)}
-                  name="journalEntry"
-                  onKeyDown={handlePressEnter}
-                />
-                <Button className={styles.save} onClick={(e) => submitJournal(e)}>
-                  Save Entry
-                </Button>
-              </main>
-            </>
-          );
+            return (
+                <>
+                  <Head>
+                    <title>Enhanced Journal</title>
+                  </Head>
+                  <main className="ml-6 bg-[#040D12]">
+                      <p className="text-4xl text-white mt-[1.5em] mb-[1em] ml-[4em]">Tell me about your day</p>
+                      <div className="flex flex-col justify-center items-center">
+                        <textarea
+                        className="w-3/4 h-[15em] p-2 border-[0.02em] rounded-md text-base text-white focus:ring focus:border-blue-500 resize-y bg-neutral-900"                  placeholder="Enter journal entry"
+                        value={journalEntry}
+                        onChange={(e) => handleTextareaChange(e)}
+                        name="journalEntry"
+                        onKeyDown={handlePressEnter}
+                        />
+                      <Button className="w-[8em] mt-5 bg-gray-800 text-white" onClick={(e) => submitJournal(e)}>
+                        Save Entry
+                      </Button>
+                      </div>
+                    
+                  </main>
+                </>
+              );
 
 }
 
