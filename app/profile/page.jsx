@@ -20,42 +20,36 @@ import {
 
 
 
-const data = [
+const data1 = [
   {
     subject: "Happy",
     A: 100,
-    B: 110,
-    fullMark: 150
+    fullMark: 100
   },
   {
     subject: "Sad",
     A: 98,
-    B: 130,
-    fullMark: 150
+    fullMark: 100
   },
   {
     subject: "neutral",
     A: 86,
-    B: 130,
-    fullMark: 150
+    fullMark: 100
   },
   {
     subject: "anger",
     A: 99,
-    B: 100,
-    fullMark: 150
+    fullMark: 100
   },
   {
     subject: "confusion",
     A: 85,
-    B: 90,
-    fullMark: 150
+    fullMark: 100
   },
   {
     subject: "fear",
     A: 65,
-    B: 85,
-    fullMark: 150
+    fullMark: 100
   }
 ];
 
@@ -106,10 +100,17 @@ const data2 = [
 
 const page = () => {
   const [emotion, setEmotion] = useState(sessionStorage.getItem("Emotions"));
-
+  const [data, setData] = useState(data1)
 
   useEffect(() => {
-    console.log(emotion);
+    console.log(emotion)
+    const emotionJSON = JSON.parse(emotion)
+    const newData = Object.keys(emotionJSON).map(label => ({
+      subject: label.charAt(0).toUpperCase() + label.slice(1), // Capitalize the first letter
+      A: Math.round(emotionJSON[label] * 100), // Assuming the full mark is 100
+      fullMark: 100
+    }));
+    setData(newData);
   }, []);
   
   return (
