@@ -53,11 +53,11 @@ const Notepad = () => {
       const submitEntry = async () =>{
         currEntry.push(journalEntry)
         try {
-            const res = await fetch ("/api/respond",{
+            const res = await fetch ("/api/getVector",{
                 method: "POST",
                 headers: {
                     "Content-Type":"application/json",
-                }
+                },
                 body: JSON.stringify({message:journalEntry})
             });
         const data = await response.json();
