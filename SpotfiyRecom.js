@@ -29,6 +29,7 @@ emotionToFrequencyMapping = {
     "pride": [639],           // 639 Hz for promoting love and understanding
 }
 
+
 // Manual Input
 
 var input = {
@@ -75,35 +76,4 @@ Object.keys(musicNums).forEach((emotion) => {
 })
 
 console.log(frequencyNums)
-
-
-//Spotify stuff
-
-client_id = 'ac7e13fcbc7c4618ae8a92a4709d0fb4'
-secret = 'aba1bdbe2dc548aa99a38068ca83a38b'
-
-const accessToken = 'YOUR_ACCESS_TOKEN'; // Replace with your actual access token
-const searchQuery = 'YOUR_SEARCH_QUERY'; // Replace with your search query
-
-// Define the Spotify API endpoint for searching for playlists
-const endpoint = `https://api.spotify.com/v1/search?q=${encodeURIComponent(searchQuery)}&type=playlist`;
-
-// Make a GET request to the Spotify API
-fetch(endpoint, {
-  method: 'GET',
-  headers: {
-    'Authorization': `Bearer ${accessToken}`
-  }
-})
-.then(response => response.json())
-.then(data => {
-  // Handle the API response data
-  console.log(data);
-})
-.catch(error => {
-  // Handle any errors
-  console.error('Error:', error);
-});
-
-
 

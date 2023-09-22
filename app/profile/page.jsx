@@ -6,12 +6,21 @@ import { useEffect, useState } from 'react';
 import queryString from 'query-string';
 
 const page = () => {
+  const [frequencyUri, setFrequencyUri] = useState({
+    "432": '37i9dQZF1DX3DRt77Ekehy',
+    "528": '37i9dQZF1DWTvEFX6xtoQd',
+    "639": '37i9dQZF1DXdsUypiO3RNF',
+    "741": '37i9dQZF1DX9t48dpVo99H',
+    "852": '37i9dQZF1DX10jlupqH0Bt',
+    "396": '37i9dQZF1DX9JGJTJ2WFXi'
+  });
   const [accessToken, setAccessToken] = useState(localStorage.getItem('token'));
-  const [finalTracks, setFinalTracks] = useState([]);
+  // const [finalTracks, setFinalTracks] = useState([]);
 
   useEffect(() => {
     setAccessToken(localStorage.getItem('token'));
     console.log(accessToken);
+    console.log(frequencyUri["432"]);
   }, [])
 
 
@@ -34,11 +43,10 @@ const page = () => {
     window.location.href = `https://accounts.spotify.com/authorize?${queryParams}`;
   };
 
-  const getPlaylistById = async (id) => {
+  const getPlaylistSongsById = async (id, limit) => {
     // const { accessToken } = localStorage.getItem('token');
-    console.log(accessToken);
-
-    const searchQuery = '432'; // Replace with your search query
+    console.log("Entered GetPLaylist function");
+    console.log(id, "Nop");
 
     // Define the Spotify API endpoint for searching for playlists
     const endpoint = `https://api.spotify.com/v1/playlists/${id}`;
@@ -53,15 +61,16 @@ const page = () => {
       })
       let data = await resp.json();
       console.log(data);
+      console.log("data")
       data = data['tracks']['items']
       console.log(data);
 
-      var limit = 10
       var i = 0
       var tracks = []
+      console.log(tracks)
       var visited = []
       while (i < limit) {
-        let rand = Math.floor((Math.random() * 100) + 1);
+        let rand = Math.floor((Math.random() * limit) + 1);
         let current_track = data[rand]['track']
         tracks.push(current_track['uri'])
         if (rand in visited) {
@@ -72,16 +81,19 @@ const page = () => {
       }
 
       console.log(tracks)
-      setFinalTracks(tracks)
-      let rand = Math.floor((Math.random() * 100) + 1);
+      console.log("Exited GetPLaylist function");
+      return tracks
+      // setFinalTracks(tracks)
+
     }
     catch (error) {
       // Handle any errors
+      console.log("Exited GetPLaylist function with errors");
       console.error('Error:', error);
     }
   }
 
-  const createPlaylist = async (name) => {
+  const createPlaylist = async (name, finalTracks) => {
 
     try {
       var resp = await fetch('https://api.spotify.com/v1/me', {
@@ -125,6 +137,7 @@ const page = () => {
   }
 
   const addSongsToPlaylist = async (accessToken, playlistId, tracks) => {
+    console.log("Yes another", tracks)
     const addTracksEndpoint = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`; // Endpoint for adding tracks to a playlist
     console.log(tracks);
     try {
@@ -150,6 +163,27 @@ const page = () => {
     } catch (error) {
       console.error('Error:', error);
     }
+  }
+
+  const TestInput = async (input) => {
+    try {
+      console.log(input)
+      let finalTracks = []
+      var frequencies = Object.keys(input)
+      for (var i = 0; i < frequencies.length; i++) {
+        console.log(frequencies[i], "frequency")
+        let tracks = await getPlaylistSongsById(frequencyUri[frequencies[i]], input[frequencies[i]])
+        console.log(tracks, "tracks inside TestInput")
+        finalTracks = finalTracks.concat(tracks)
+      };
+
+      console.log(finalTracks, "FINAL PLAYLIST")
+      createPlaylist("TestPlaylist", finalTracks)
+      console.log("done")
+    }
+    catch (error) {
+      console.error('Error:', error);
+    }
 
   }
 
@@ -158,9 +192,15 @@ const page = () => {
       <div>Profile</div>
       <button onClick={handleLogin}>Login with Spotify</button>
       <br />
-      <button onClick={() => { getPlaylistById("37i9dQZF1DX3DRt77Ekehy") }}>Get playlist</button>
+      <button onClick={() => { getPlaylistSongsById("37i9dQZF1DX3DRt77Ekehy", 10) }}>Get playlist</button>
       <br />
-      <button onClick={() => { createPlaylist("TestPlaylist") }}>create playlist</button>
+      <button onClick={() => { createPlaylist("TestPlaylist", []) }}>create playlist</button>
+      <br />
+      <button onClick={() => {
+        TestInput(
+          { '432': 10, '639': 6, '852': 4 }
+        )
+      }}>Process Input and generate Playlist</button>
     </>
   )
 }
