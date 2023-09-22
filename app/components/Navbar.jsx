@@ -1,27 +1,47 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { UserAuth } from "../context/AuthContext";
+// import { UserAuth } from "../context/AuthContext";
+import { EmailContext } from "../context/EmailContext";
+import firebase from "firebase/app";
+import app from "../firebase";
 
 const Navbar = () => {
-  const { user, googleSignIn, logOut } = UserAuth();
+//   const { user, googleSignIn, logOut } = UserAuth();
+  const [user,setUser] = useState("")
   const [loading, setLoading] = useState(true);
 
   const handleSignIn = async () => {
-    try {
-      await googleSignIn();
-    } catch (error) {
-      console.log(error);
-    }
+        var provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope("profile");
+        provider.addScope("email");
+        firebase
+          .auth()
+          .signInWithPopup(provider)
+          .then(function (result) {
+            // This gives you a Google Access Token.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            setUser(result.user);
+            // set session storage here
+            sessionStorage.setItem("email", user.email);
+            sessionStorage.setItem("name", user.displayName);
+          });
   };
 
-  const handleSignOut = async () => {
-    try {
-      await logOut();
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSignOut = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        // Redirect to home page
+        console.log("SignOut")
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
   };
+
 
   useEffect(() => {
     const checkAuthentication = async () => {

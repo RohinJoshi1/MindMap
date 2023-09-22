@@ -8,11 +8,11 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import toast from "react-simple-toasts";
-import {app} from "../firebase";
+import app from "../firebase";
 import styles from "./index.module.css";
 const { Title, Text } = Typography;
 const Notepad = () => {
-    const { user } = UserAuth();
+    // const { user } = UserAuth();
     const [journalEntry, setJournalEntry] = useState("");
     const [result, setResult] = useState();
     const [currEntry, setCurrEntry] = useState([]);
@@ -30,7 +30,7 @@ const Notepad = () => {
       //Submit journal will push data to db
       const submitJournal = (event)=>{
         //Create entry id 
-        const id = user;
+        const id = sessionStorage.getItem("email").replace(/\./g, "");;
         const date = new Date()
         const time = date.getTime()
         const sesh = 
@@ -57,8 +57,9 @@ const Notepad = () => {
                 method: "POST",
                 headers: {
                     "Content-Type":"application/json",
+
                 },
-                body: JSON.stringify({message:journalEntry})
+                body: JSON.stringify({messages:journalEntry})
             });
         const data = await response.json();
         setResult(data.result);

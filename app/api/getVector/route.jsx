@@ -1,25 +1,25 @@
-async function query(req) {
+export async function POST(req) {
     const {messages} = await req.json()
-	const response = await fetch(
-
-		"https://api-inference.huggingface.co/models/SamLowe/roberta-base-go_emotions",
-		{
-			headers: { Authorization: "Bearer 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" },
-			method: "POST",
-			body: JSON.stringify(messages),
-		}
-	);
+    console.log(messages)
+    const modelUrl = "https://api-inference.huggingface.co/models/SamLowe/roberta-base-go_emotions"
+	const response = await fetch(modelUrl, {
+        headers: {
+          Authorization: `Bearer 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`,
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ inputs: messages }),
+      });
 	const result = await response.json();
-    const res = reduceCategoriesAndFormat(result);
-    console.log(res);
-	return res;
+    console.log(result);
+	return result;
 }
 // query({ "inputs": "I like you. I love you" }).then((response) => {
 // 	console.log(JSON.stringify(response));
 // });
 
 function reduceCategoriesAndFormat(data) {
-    
+
 	const firstFourEntries = data[0].slice(0, 4);
 	const formattedData = {};
 	firstFourEntries.forEach((entry) => {
@@ -29,20 +29,20 @@ function reduceCategoriesAndFormat(data) {
 	return formattedData;
 }
 
-async function POST(req: Request) {
-      // Extract the `messages` from the body of the request
-      const { messages } = await req.json();
-      const res = query(messages)
+// async function POST(req: Request) {
+//       // Extract the `messages` from the body of the request
+//       const { messages } = await req.json();
+//       const res = query(messages)
 
 
 
       
 
     
-}
+// }
 
 
-async function POST(req: Request) {
+// async function POST(req: Request) {
     //   // Extract the `messages` from the body of the request
     //   const { messages } = await req.json();
     
