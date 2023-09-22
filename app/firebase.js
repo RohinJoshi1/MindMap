@@ -1,12 +1,15 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApps, getApp  } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-import {getAuth} from "firebase/auth"
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
+// import { initializeApp, getApps, getApp  } from "firebase/app";
+// // TODO: Add SDKs for Firebase products that you want to use
+// // https://firebase.google.com/docs/web/setup#available-libraries
+// import {getAuth} from "firebase/auth"
+// import { getDatabase } from "firebase/database";
+import firebase from "firebase"
+import { getAuth } from 'firebase/auth';
+// import { getFirestore, collection, getDocs } from 'firebase/firestore'
 
 // Your web app's Firebase configuration
-const config = {
+const firebaseConfig = {
   apiKey: "AIzaSyA5wmWnoRX8Q6ftDH6udq7AmQflNkrLIzk",
   authDomain: "mindmap-8fb1a.firebaseapp.com",
   projectId: "mindmap-8fb1a",
@@ -16,8 +19,4 @@ const config = {
 };
 
 // Initialize Firebase
-const app =  getApps().length === 0 ? initializeApp(config) : getApp();
-const auth = getAuth(app);
-const db = getFirestore(app);
-export {auth, app,db}
-
+export default !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
