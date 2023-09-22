@@ -1,5 +1,7 @@
 "use client";
 import React from 'react'
+import {Button} from 'antd'
+import {Image} from "@nextui-org/react";
 import {
   Radar,
   RadarChart,
@@ -102,55 +104,69 @@ const data2 = [
 ];
 
 const page = () => {
+
   return (
-    <div className="flex flex-row flex-wrap content-center justify-around p2 w-[100] min-h-screen">
-      <div >
-        <RadarChart
-          cx={300}
-          cy={250}
-          outerRadius={150}
-          width={500}
-          height={500}
-          data={data}
-        >
-          <PolarGrid />
-          <PolarAngleAxis dataKey="subject" />
-          <PolarRadiusAxis />
-          <Radar
-            name="Mike"
-            dataKey="A"
-            stroke="#8884d8"
-            fill="#8884d8"
-            fillOpacity={0.6}
-          />
-        </RadarChart>
-      </div>
-      <div className="mt-20">
-        <LineChart
-          width={500}
-          height={300}
-          data={data2}
-          margin={{
-            top: 2,
-            right: 30,
-            left: 20,
-            bottom: 5
-          }}
-        >
-          <CartesianGrid  />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="pv"
-            stroke="#8884d8"
-            activeDot={{ r: 8 }}
-          />
-        </LineChart>
+    <div>
+        <div className='flex justify-end mr-[2em] mt-[2em]'>
+          <Button className='w-[6em] h-[4.5em]'>
+            <Image
+                removeWrapper
+                alt="Spotify"
+                className="z-0 w-full h-full object-cover rounded-xl"
+                src="/images/spotify.png"
+              />
+          </Button>
+        </div>
+        <div className="flex flex-row flex-wrap content-center justify-around p2 w-[100]">
+        <div >
+          <RadarChart
+            cx={300}
+            cy={250}
+            outerRadius={150}
+            width={500}
+            height={500}
+            data={data}
+          >
+            <PolarGrid />
+            <PolarAngleAxis dataKey="subject" />
+            <PolarRadiusAxis />
+            <Radar
+              name="Mike"
+              dataKey="A"
+              stroke="#8884d8"
+              fill="#8884d8"
+              fillOpacity={0.6}
+            />
+          </RadarChart>
+        </div>
+        <div className="mt-20">
+          <LineChart
+            width={500}
+            height={300}
+            data={data2}
+            margin={{
+              top: 2,
+              right: 30,
+              left: 20,
+              bottom: 5
+            }}
+          >
+            <CartesianGrid  />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="pv"
+              stroke="#8884d8"
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
+        </div>
       </div>
     </div>
+
 
   )
 }

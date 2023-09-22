@@ -48,7 +48,7 @@ const Navbar = () => {
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="relative flex items-center justify-between h-20">
+            <div className="relative flex items-center justify-between h-[4em]">
               <div className="flex-shrink-0">
                 <img
                   className="h-8 w-auto"
