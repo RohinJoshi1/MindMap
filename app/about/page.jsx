@@ -2,8 +2,12 @@
 import React from "react";
 import { Button } from 'antd';
 import { Card, CardHeader, CardBody, CardFooter, Image, Container } from "@nextui-org/react";
+import { useState, useEffect } from 'react';
+
 
 export default function page() {
+  const [playlistUrl, setPlaylistUrl] = useState(sessionStorage.getItem("playlistUrl"))
+
   return (
     <div className="m-auto max-w-[900px] mt-[3em]">
       <div className="max-w-[900px] gap-2 grid grid-cols-12 grid-rows-2 p-4 ">
@@ -72,12 +76,14 @@ export default function page() {
             </div>
             <Image className="z-20 w-[50px] h-full" src="/images/spotify.png" />
           </CardHeader>
-          <Image
-            removeWrapper
-            alt="Relaxing app background"
-            className="z-0 w-full h-full object-cover rounded-xl"
-            src="/images/card-example-5.jpeg"
-          />
+          <a href={playlistUrl? playlistUrl : ""} target={playlistUrl? "_blank" : ""}>
+            <Image
+              removeWrapper
+              alt="Relaxing app background"
+              className="z-0 w-full h-full object-cover rounded-xl"
+              src="/images/card-example-5.jpeg"
+            />
+          </a>
           {/* <CardFooter className="absolute bg-black/40 bottom-0 z-10 border-t-1 border-default-600 dark:border-default-100 rounded-xl p-2">
           <div className="flex flex-grow gap-2 items-center">
             <Image

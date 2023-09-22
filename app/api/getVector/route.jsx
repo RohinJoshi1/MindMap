@@ -22,9 +22,6 @@ export async function POST(req) {
           "Content-Type": "application/json", // Adjust the content type based on the actual audio format
         },
       });
-    //   return JSON.stringify(res)
-    
-//   return result
 }
 function reduceCategoriesAndFormat(data) {
 

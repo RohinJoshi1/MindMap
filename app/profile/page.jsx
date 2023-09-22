@@ -2,6 +2,8 @@
 import React from 'react'
 import {Button} from 'antd'
 import {Image} from "@nextui-org/react";
+import { useEffect, useState } from 'react';
+import queryString from 'query-string';
 import {
   Radar,
   RadarChart,
@@ -17,12 +19,6 @@ import {
   Tooltip,
   Legend
 } from "recharts";
-
-
-  const item =  sessionStorage.getItem("emotions");
-  console.log("PROFILE")
-  console.log(item)
-
 
 
 const data = [
@@ -111,10 +107,36 @@ const data2 = [
 
 const page = () => {
 
+  const [accessToken, setAccessToken] = useState(localStorage.getItem('token'));
+
+  useEffect(() => {
+    setAccessToken(localStorage.getItem('token'));
+    console.log(accessToken);
+  }, [])
+
+  //new stuff
+  const handleLogin = () => {
+    const clientID = 'ac7e13fcbc7c4618ae8a92a4709d0fb4';
+    const redirectURI = 'http://localhost:3001'; // Must match the one in your Spotify Developer App settings
+    const scope = 'user-read-private user-read-email playlist-modify-public'; // Add any required scopes
+    const clientSecret = "aba1bdbe2dc548aa99a38068ca83a38b"
+
+    const queryParams = queryString.stringify({
+      client_id: clientID,
+      redirect_uri: redirectURI,
+      clientSecret: clientSecret,
+      scope: scope,
+      response_type: 'token',
+    });
+
+    // Redirect the user to Spotify's authorization page
+    window.location.href = `https://accounts.spotify.com/authorize?${queryParams}`;
+  };
+
   return (
     <div>
         <div className='flex justify-end mr-[2em] mt-[2em]'>
-          <Button className='w-[6em] h-[4.5em]'>
+          <Button className='w-[6em] h-[4.5em]' onClick={handleLogin}>
             <Image
                 removeWrapper
                 alt="Spotify"
@@ -144,7 +166,6 @@ const page = () => {
               fillOpacity={0.6}
             />
           </RadarChart>
-          
         </div>
         <div className="mt-20">
           <LineChart
@@ -170,7 +191,6 @@ const page = () => {
               activeDot={{ r: 8 }}
             />
           </LineChart>
-          <h2 className='text-center text-xl pt-20 pl-20'>Week Chart</h2>
         </div>
       </div>
     </div>

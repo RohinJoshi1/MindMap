@@ -14,6 +14,11 @@ const Navbar = () => {
   // const { user, signIn, signOut} = UserAuth();
   const [loading, setLoading] = useState(true);
   const [user,setUser] = useState("")
+  const [navigation, setNavigation] = useState( [
+    { name: "My Journal", href: "/", current: true },
+    { name: "Recommendations", href: "/about", current: false },
+    { name: "Profile", href: "/profile", current: false },
+  ])
   // const [loading, setLoading] = useState(true);
 
   const handleSignIn = async () => {
@@ -29,6 +34,8 @@ const Navbar = () => {
             // The signed-in user info.
             setUser(result.user);
             // set session storage here
+            console.log(result.user);
+            console.log(user.displayName)
             sessionStorage.setItem("email", user.email);
             sessionStorage.setItem("name", user.displayName);
           });
@@ -47,12 +54,29 @@ const Navbar = () => {
       });
   };
 
+  const changeNavigation = () => {
+    if (user) {
+      setNavigation([
+        { name: "My Journal", href: "/", current: true },
+        { name: "Recommendations", href: "/about", current: false },
+        { name: "Profile", href: "/profile", current: false },
+      ])
+    } else {
+      setNavigation([
+        { name: "My Journal", href: "/", current: true },
+        { name: "Recommendations", href: "/about", current: false },
+      ])
+    }
+  }
+
   useEffect(() => {
     const checkAuthentication = async () => {
       await new Promise((resolve) => setTimeout(resolve, 50));
       setLoading(false);
     };
     checkAuthentication();
+    changeNavigation();
+    console.log(user.name, "useeffect")
   }, [user]);
   // const handleSignIn = async () => {
   //   try {
@@ -78,21 +102,17 @@ const Navbar = () => {
   //   checkAuthentication();
   // }, [user]);
 
-  const navigation = [
-    { name: "My Journal", href: "/", current: true },
-    { name: "Recommendations", href: "/about", current: false },
-    { name: "Profile", href: "/profile", current: false },
-  ];
+
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
   }
 
   return (
-    <Disclosure as="nav" className="bg-[#040D12] shadow-slate-700 shadow-md">
+    <Disclosure as="nav" className="bg-[#040D12] mb-[0.035em] shadow-slate-700 shadow-md">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-10 px-4 sm:px-6 lg:px-0">
             <div className="relative flex items-center justify-between h-[4em]">
               <div className="flex-shrink-0">
                 <img
@@ -104,6 +124,7 @@ const Navbar = () => {
 
               <div className="hidden sm:block">
                 <div className="flex space-x-4">
+               
                   {navigation.map((item) => (
                     <a
                       key={item.name}
@@ -111,12 +132,12 @@ const Navbar = () => {
                       className={classNames(
                         item.current ? "bg-gray-900 text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white",
                         "rounded-md px-3 py-2 text-sm font-medium",
-                        item.name === "Profile" && !user ? "cursor-not-allowed" : ""
                       )}
                       aria-current={item.current ? "page" : undefined}
                     >
                       {item.name}
                     </a>
+                    
                   ))}
                 </div>
               </div>
@@ -136,7 +157,7 @@ const Navbar = () => {
               <div className="hidden sm:block space-x-4">
                 {user ? (
                   <div className="flex items-center space-x-2">
-                    <p className="text-white text-sm">Welcome, {user.displayName}</p>
+                    <p className="text-white text-sm">Welcome, {user.displayName} &nbsp;&nbsp;&nbsp;</p>
                     <button onClick={handleSignOut} className="text-gray-300 hover:text-white border border-white rounded px-3 py-1">
                       Sign out
                     </button>

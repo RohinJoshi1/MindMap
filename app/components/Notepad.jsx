@@ -1,22 +1,34 @@
 "use client"
 import { Button, Typography } from "antd";
-import firebase from "firebase/app";
 import Head from "next/head";
-import Link from "next/link";
-import {Textarea} from "@nextui-org/react";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { UserAuth } from "../context/AuthContext";
-import toast from "react-simple-toasts";
+import { useState, useEffect } from "react";
 import app from "../firebase";
-import styles from "./index.module.css";
+import queryString from 'query-string';
+import getFrequencies from "../helper/spotifyRecom";
+import GenerateSpotifyPlaylist from "../helper/spotifyHelper"
+
 const { Title, Text } = Typography;
 const Notepad = () => {
     // const { user } = UserAuth();
     const [journalEntry, setJournalEntry] = useState("");
     const [result, setResult] = useState();
-    const [convo,setConvo] = useState("Tell me about your day")
+    const [convo,setConvo] = useState("Tell Me About Your Day")
     const [currEntry, setCurrEntry] = useState([]);
+    const [accessToken, setAccessToken] = useState(localStorage.getItem('token'));
+
+
+    useEffect(() => {
+
+      if (!accessToken) {
+        const { access_token } = queryString.parse(window.location.hash);
+        localStorage.setItem('token', access_token);
+      }
+      var token = localStorage.getItem('token')
+      setAccessToken(token)
+      console.log(accessToken);
+    }, []);
+
+
     const handleTextareaChange = (event) => {
         setJournalEntry(event.target.value);
       };
@@ -46,8 +58,14 @@ const Notepad = () => {
         const data = await response.json();
         // setResult(data.result);
         console.log("NOTEPAD")
-        sessionStorage.setItem("Emotions",JSON.stringify(data))
+        sessionStorage.setItem("Emotions", JSON.stringify(data))
+        const frequencyMappings = getFrequencies(data, 20)
+        
         console.log(data)
+        console.log(frequencyMappings)
+
+        const playlistUrl = await GenerateSpotifyPlaylist(frequencyMappings, accessToken)
+        sessionStorage.setItem("playlistUrl", playlistUrl)
         
         //Check if it's 200
         } catch (error) {
@@ -63,7 +81,6 @@ const Notepad = () => {
         const reference = app.database().ref("users").child(id).child("sessions")
         const append = reference.push()
         append.set(sesh)
-        alert("Saved");
         setJournalEntry("");
         console.log(event)
         //Get db ref 
@@ -96,29 +113,30 @@ const Notepad = () => {
             console.log(error)
         }
       }
-            return (
-                <>
-                  <Head>
-                    <title>MindMap</title>
-                  </Head>
-                  <main className="ml-6 bg-[#040D12]">
-                      <p className="text-4xl text-white mt-[1.5em] mb-[1em] ml-[4em]">{convo}</p>
-                      <div className="flex flex-col justify-center items-center">
-                        <textarea
-                        className="w-3/4 h-[15em] p-2 border-[0.02em] rounded-md text-base text-white focus:ring focus:border-blue-500 resize-y bg-neutral-900"                  placeholder="Enter journal entry"
-                        value={journalEntry}
-                        onChange={(e) => handleTextareaChange(e)}
-                        name="journalEntry"
-                        onKeyDown={handlePressEnter}
-                        />
-                      <Button className="w-[8em] mt-5 bg-gray-800 text-white" onClick={(e) => submitJournal(e)}>
-                        Save Entry
-                      </Button>
-                      </div>
-                    
-                  </main>
-                </>
-              );
+    return (
+        <>
+          <Head>
+            <title>MindMap</title>
+          </Head>
+          <main className="bg-[#040D12]  h-screen m-0 w-full">
+              
+              <div className="flex flex-col justify-items-center items-center">
+                <p className="text-4xl justify-self-start text-white mt-[0.04em] pt-8 mb-[1em] self-start ml-[5em]">{convo}</p>
+                <textarea
+                className="w-3/4 h-[15em] p-2 border-[0.02em] rounded-md text-base text-white focus:ring focus:border-blue-500 resize-y bg-neutral-900"                  placeholder="Enter journal entry"
+                value={journalEntry}
+                onChange={(e) => handleTextareaChange(e)}
+                name="journalEntry"
+                onKeyDown={handlePressEnter}
+                />
+              <Button className="w-[8em] mt-5 bg-gray-800 text-white" onClick={(e) => submitJournal(e)}>
+                Save Entry
+              </Button>
+              </div>
+            
+          </main>
+        </>
+      );
 
 }
 
