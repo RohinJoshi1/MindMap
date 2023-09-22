@@ -15,6 +15,7 @@ const Notepad = () => {
     // const { user } = UserAuth();
     const [journalEntry, setJournalEntry] = useState("");
     const [result, setResult] = useState();
+    const [convo,setConvo] = useState("Tell me about your day")
     const [currEntry, setCurrEntry] = useState([]);
     const handleTextareaChange = (event) => {
         setJournalEntry(event.target.value);
@@ -28,42 +29,68 @@ const Notepad = () => {
         }
       };
       //Submit journal will push data to db
-      const submitJournal = (event)=>{
+      const submitJournal = async (event)=>{
         //Create entry id 
         const id = sessionStorage.getItem("email").replace(/\./g, "");;
         const date = new Date()
         const time = date.getTime()
+        
+        try {
+            const response = await fetch ("/api/getVector",{
+                method: "POST",
+                headers: {
+                    "Content-Type":"application/json",
+                },
+                body: JSON.stringify({messages:journalEntry})
+            });
+        const data = await response.json();
+        // setResult(data.result);
+        console.log("NOTEPAD")
+        sessionStorage.setItem("Emotions",JSON.stringify(data))
+        console.log(data)
+        
+        //Check if it's 200
+        } catch (error) {
+            console.log(error)
+        }
         const sesh = 
         {   
             date: date,
             time:time,
-            entry:currEntry
+            entry:currEntry,
+
         }
         const reference = app.database().ref("users").child(id).child("sessions")
         const append = reference.push()
         append.set(sesh)
         alert("Saved");
+        setJournalEntry("");
         console.log(event)
         //Get db ref 
         
-
-
       }
       //Feed this to LLM + (Summarizer + Roberta)
       const submitEntry = async () =>{
         currEntry.push(journalEntry)
+        console.log("ENtry submission")
+        console.log(journalEntry)
+        
         try {
-            const res = await fetch ("/api/getVector",{
+            const response = await fetch ("/api/generate",{
                 method: "POST",
                 headers: {
                     "Content-Type":"application/json",
-
                 },
-                body: JSON.stringify({messages:journalEntry})
+                body: JSON.stringify({ messages: journalEntry})
             });
         const data = await response.json();
-        setResult(data.result);
-        setJournalEntry("");
+        if(response.status!=200){
+            throw(new Error(`${response.status}`))
+
+        }
+        // setResult(data.result);
+        sessionStorage.setItem("emotion",data.result)
+        
         //Check if it's 200
         } catch (error) {
             console.log(error)
@@ -72,10 +99,10 @@ const Notepad = () => {
             return (
                 <>
                   <Head>
-                    <title>Enhanced Journal</title>
+                    <title>MindMap</title>
                   </Head>
                   <main className="ml-6 bg-[#040D12]">
-                      <p className="text-4xl text-white mt-[1.5em] mb-[1em] ml-[4em]">Tell me about your day</p>
+                      <p className="text-4xl text-white mt-[1.5em] mb-[1em] ml-[4em]">{convo}</p>
                       <div className="flex flex-col justify-center items-center">
                         <textarea
                         className="w-3/4 h-[15em] p-2 border-[0.02em] rounded-md text-base text-white focus:ring focus:border-blue-500 resize-y bg-neutral-900"                  placeholder="Enter journal entry"

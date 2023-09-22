@@ -1,3 +1,4 @@
+
 export async function POST(req) {
     const {messages} = await req.json()
     console.log(messages)
@@ -11,24 +12,30 @@ export async function POST(req) {
         body: JSON.stringify({ inputs: messages }),
       });
 	const result = await response.json();
-    console.log(result);
-	return result;
+    const res = reduceCategoriesAndFormat(result)
+    const _res = JSON.stringify(res)
+    // console.log(result)
+    // console.log("ROAHSDOFn")
+    // console.log(res)
+    return new Response(_res, {
+        headers: {
+          "Content-Type": "application/json", // Adjust the content type based on the actual audio format
+        },
+      });
+    //   return JSON.stringify(res)
+    
+//   return result
 }
-// query({ "inputs": "I like you. I love you" }).then((response) => {
-// 	console.log(JSON.stringify(response));
-// });
-
 function reduceCategoriesAndFormat(data) {
 
-	const firstFourEntries = data[0].slice(0, 4);
-	const formattedData = {};
-	firstFourEntries.forEach((entry) => {
-		formattedData[entry.label] = entry.score;
-	});
+    const firstFourEntries = data[0].slice(0, 4);
+    const formattedData = {};
+    firstFourEntries.forEach((entry) => {
+        formattedData[entry.label] = entry.score;
+    });
 
-	return formattedData;
+    return formattedData;
 }
-
 // async function POST(req: Request) {
 //       // Extract the `messages` from the body of the request
 //       const { messages } = await req.json();

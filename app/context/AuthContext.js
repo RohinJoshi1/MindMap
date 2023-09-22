@@ -36,56 +36,75 @@
 // //   );
 // // };
 
-// import React, { createContext, useState, useEffect } from 'react';
-// import firebase from 'firebase/app';
-// import 'firebase/auth';
-// import app from "../firebase"
+import React, { useContext, createContext, useState, useEffect } from 'react';
+import { EmailContext } from "../context/EmailContext";
+import firebase from "firebase/app";
+import app from "../firebase";
+// Create Auth Context
+export const AuthContext = createContext();
 
-// // Create Auth Context
-// export const AuthContext = createContext();
+// Create Auth Provider Component
+export const AuthProvider = ({ children }) => {
+  const [user,setUser] = useState(null)
+  const [loading, setLoading] = useState(true);
 
-// // Create Auth Provider Component
-// export const AuthProvider = ({ children }) => {
-//   const [currentUser, setCurrentUser] = useState(null);
-//   const [loading, setLoading] = useState(true);
+  // Function to handle Google Sign-In
+  const signIn = async () => {
+    var provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope("profile");
+    provider.addScope("email");
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(function (result) {
+        // This gives you a Google Access Token.
+        var token = result.credential.accessToken;
+        // The signed-in user info.
+        setUser(result.user);
+        // set session storage here
+        sessionStorage.setItem("email", user.email);
+        sessionStorage.setItem("name", user.displayName);
+      });
+};
+  // Function to handle Sign-Out
+  const signOut = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        // Redirect to home page
+        console.log("SignOut")
+      })
+      .catch((error) => {
+        console.error("Error signing out:", error);
+      });
+  };
 
-//   // Function to handle Google Sign-In
-//   const signInWithGoogle = () => {
-//     const provider = new firebase.auth.GoogleAuthProvider();
-//     firebase.auth().signInWithPopup(provider);
-//   };
+  useEffect(() => {
+    // Listen for authentication state changes
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      setCurrentUser(user);
+      setLoading(false);
+    });
 
-//   // Function to handle Sign-Out
-//   const signOut = () => {
-//     firebase.auth().signOut();
-//   };
+    // Clean up subscription
+    return () => unsubscribe();
+  }, []);
 
-//   useEffect(() => {
-//     // Listen for authentication state changes
-//     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-//       setCurrentUser(user);
-//       setLoading(false);
-//     });
+  // Render Auth Provider with Auth Context value
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        signIn,
+        signOut,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
 
-//     // Clean up subscription
-//     return () => unsubscribe();
-//   }, []);
-
-//   // Render Auth Provider with Auth Context value
-//   return (
-//     <AuthContext.Provider
-//       value={{
-//         currentUser,
-//         loading,
-//         signInWithGoogle,
-//         signOut,
-//       }}
-//     >
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// };
-
-// export const UserAuth = () => {
-//   return useContext(AuthContext);
-// };
+export const UserAuth = () => {
+  return useContext(AuthContext);
+};

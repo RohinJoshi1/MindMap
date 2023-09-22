@@ -4,16 +4,17 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-
-// import { UserAuth } from "../context/AuthContext";
+// import app from "../firebase"
+// import {UserAuth}  from "../context/AuthContext";
 import { EmailContext } from "../context/EmailContext";
 import firebase from "firebase/app";
 import app from "../firebase";
 
 const Navbar = () => {
-//   const { user, googleSignIn, logOut } = UserAuth();
-  const [user,setUser] = useState("")
+  // const { user, signIn, signOut} = UserAuth();
   const [loading, setLoading] = useState(true);
+  const [user,setUser] = useState("")
+  // const [loading, setLoading] = useState(true);
 
   const handleSignIn = async () => {
         var provider = new firebase.auth.GoogleAuthProvider();
@@ -53,6 +54,29 @@ const Navbar = () => {
     };
     checkAuthentication();
   }, [user]);
+  // const handleSignIn = async () => {
+  //   try {
+  //     await signIn();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // const handleSignOut = async () => {
+  //   try {
+  //     await signOut();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const checkAuthentication = async () => {
+  //     await new Promise((resolve) => setTimeout(resolve, 50));
+  //     setLoading(false);
+  //   };
+  //   checkAuthentication();
+  // }, [user]);
 
   const navigation = [
     { name: "My Journal", href: "/", current: true },

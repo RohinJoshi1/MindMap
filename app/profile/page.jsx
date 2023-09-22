@@ -19,6 +19,12 @@ import {
 } from "recharts";
 
 
+  const item =  sessionStorage.getItem("emotions");
+  console.log("PROFILE")
+  console.log(item)
+
+
+
 const data = [
   {
     subject: "Happy",
@@ -138,6 +144,7 @@ const page = () => {
               fillOpacity={0.6}
             />
           </RadarChart>
+          
         </div>
         <div className="mt-20">
           <LineChart
@@ -163,6 +170,7 @@ const page = () => {
               activeDot={{ r: 8 }}
             />
           </LineChart>
+          <h2 className='text-center text-xl pt-20 pl-20'>Week Chart</h2>
         </div>
       </div>
     </div>
