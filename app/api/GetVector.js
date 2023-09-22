@@ -18,8 +18,15 @@ async function query(req) {
 // 	console.log(JSON.stringify(response));
 // });
 
+
+function findWeightedAverageOfEmotions(arrEmotions) {
+	const weightedAverage = arrEmotions.reduce((acc, curr) => {
+		return acc + curr.score * curr.weight;
+	}, 0);
+	return weightedAverage;
+}
+
 function reduceCategoriesAndFormat(data) {
-    
 	const firstFourEntries = data[0].slice(0, 4);
 	const formattedData = {};
 	firstFourEntries.forEach((entry) => {
@@ -29,20 +36,20 @@ function reduceCategoriesAndFormat(data) {
 	return formattedData;
 }
 
-async function POST(req: Request) {
-      // Extract the `messages` from the body of the request
-      const { messages } = await req.json();
-      const res = query(messages)
+// async function POST(req: Request) {
+//       // Extract the `messages` from the body of the request
+//       const { messages } = await req.json();
+//       const res = query(messages)
 
 
 
       
 
     
-}
+// }
 
 
-async function POST(req: Request) {
+// async function POST(req: Request) {
     //   // Extract the `messages` from the body of the request
     //   const { messages } = await req.json();
     
