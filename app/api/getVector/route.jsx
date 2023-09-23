@@ -25,7 +25,7 @@ export async function POST(req) {
 }
 function reduceCategoriesAndFormat(data) {
 
-    const firstFourEntries = data[0].slice(0, 4);
+    const firstFourEntries = data[0].slice(0, 6);
     const formattedData = {};
     firstFourEntries.forEach((entry) => {
         formattedData[entry.label] = entry.score;

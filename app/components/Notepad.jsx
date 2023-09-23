@@ -18,13 +18,20 @@ const Notepad = () => {
 
 
     useEffect(() => {
-
-      if (!accessToken) {
-        const { access_token } = queryString.parse(window.location.hash);
+      console.log("local", localStorage.getItem('token'))
+      console.log("Hash", queryString.parse(window.location.hash))
+      const { access_token } = queryString.parse(window.location.hash);
+      // if (accessToken===undefined || localStorage.getItem('token')===undefined) {
+      //   // console.log(window.location.hash, "HASH")
+      //   // const { access_token } = queryString.parse(window.location.hash);
+      //   console.log(access_token)
+      //   localStorage.setItem('token', access_token);
+      // }
+      if(access_token){
         localStorage.setItem('token', access_token);
       }
-      var token = localStorage.getItem('token')
-      setAccessToken(token)
+      // var token = localStorage.getItem('token')
+      setAccessToken(access_token)
       console.log(accessToken);
     }, []);
 

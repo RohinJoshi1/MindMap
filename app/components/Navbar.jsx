@@ -75,7 +75,7 @@ const Navbar = () => {
       setLoading(false);
     };
     checkAuthentication();
-    changeNavigation();
+    // changeNavigation();
     console.log(user.name, "useeffect")
   }, [user]);
   // const handleSignIn = async () => {

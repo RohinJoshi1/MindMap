@@ -21,7 +21,7 @@ import {
 } from "recharts";
 
 
-const data = [
+const data1 = [
   {
     subject: "Happy",
     A: 120,
@@ -109,7 +109,24 @@ const page = () => {
 
   const [accessToken, setAccessToken] = useState(localStorage.getItem('token'));
 
+  const [emotion, setEmotion] = useState(sessionStorage.getItem("Emotions"));
+  const [data, setData] = useState(data1)
+
   useEffect(() => {
+    console.log(emotion)
+    const emotionJSON = JSON.parse(emotion)
+    if (!emotionJSON){
+      setData(data1)
+    }
+    else{
+      const newData = Object.keys(emotionJSON).map(label => ({
+        subject: label.charAt(0).toUpperCase() + label.slice(1), // Capitalize the first letter
+        A: Math.round(emotionJSON[label] * 100), // Assuming the full mark is 100
+        fullMark: 100
+      }));
+      setData(newData);
+    }
+    
     setAccessToken(localStorage.getItem('token'));
     console.log(accessToken);
   }, [])
