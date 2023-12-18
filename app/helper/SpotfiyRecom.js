@@ -79,8 +79,8 @@ console.log(frequencyNums)
 
 //Spotify stuff
 
-client_id = 'ac7e13fcbc7c4618ae8a92a4709d0fb4'
-secret = 'aba1bdbe2dc548aa99a38068ca83a38b'
+client_id = ''
+secret = ''
 
 const accessToken = 'YOUR_ACCESS_TOKEN'; // Replace with your actual access token
 const searchQuery = 'YOUR_SEARCH_QUERY'; // Replace with your search query
